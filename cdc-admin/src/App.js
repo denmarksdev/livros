@@ -9,6 +9,7 @@ class App extends Component  {
   state = { lista: [] };
 
   componentDidMount(){
+    console.log("DidMount")
     $.ajax({
       url: "http://localhost:8080/api/autores",
       dataType: 'json',
@@ -17,6 +18,7 @@ class App extends Component  {
   }
 
   render() {
+    console.log("Render")
     return (
       <div id="layout">
         <a href="#menu" id="menuLink" className="menu-link">
@@ -80,7 +82,7 @@ class App extends Component  {
                         <td>{autor.nome}</td>
                         <td>{autor.email}</td>
                       </tr>
-                    )
+                      )
                   }
                 </tbody>
               </table>
