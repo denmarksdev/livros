@@ -3,22 +3,74 @@ import './css/pure-min.css';
 import './css/side-menu.css';
 import './App.css';
 import $ from 'jquery';
+import InputCustomizado  from './componentes/inputCustomizado';
+import BotaoCustomizado  from './componentes/botaoSubmitCustomizado';
 
-class App extends Component  {
-  
-  state = { lista: [] };
+const BASE_API = "http://localhost:8080/api/autores";
 
-  componentDidMount(){
-    console.log("DidMount")
+class App extends Component {
+
+  state = {
+    lista: [],
+    nome: '',
+    email: '',
+    senha: ''
+  };
+
+  componentDidMount() {
     $.ajax({
-      url: "http://localhost:8080/api/autores",
+      url: BASE_API,
       dataType: 'json',
-      success:lista => {this.setState({lista})}
+      success: lista => { this.setState({ lista }) }
     })
   }
 
+  enviaForm = (evento) => {
+    evento.preventDefault();
+    
+    let autorJSON = {
+      nome: this.state.nome,
+      email: this.state.email,
+      senha: this.state.senha
+    };
+
+    $.ajax({
+      url: BASE_API,
+      contentType: 'application/json',
+      dataType: 'json',
+      type: 'post',
+      data: JSON.stringify(autorJSON),
+      success: lista => {
+        this.setState({
+           lista
+        })
+      },
+      error: error => {
+        console.log(error);
+      }
+    })
+  }
+
+  setNome = (evento) =>{
+    this.setState(
+      {nome:evento.target.value}
+    );
+  }
+
+  setEmail = (evento) =>{
+    console.log(evento);
+    this.setState(
+      {email:evento.target.value}
+    );
+  }
+
+  setSenha = (evento) =>{
+    this.setState(
+      {senha:evento.target.value}
+    );
+  }
+
   render() {
-    console.log("Render")
     return (
       <div id="layout">
         <a href="#menu" id="menuLink" className="menu-link">
@@ -47,25 +99,12 @@ class App extends Component  {
           </div>
           <div className="content" id="content">
             <div className="pure-form">
-              <form className="pure-form ">
-                <div className="pure-control-group">
-                  <label htmlFor="nome">Nome</label>
-                  <input id="nome" type="text" name="nome" value="" />
-                </div>
-                <div className="pure-control-group">
-                  <label htmlFor="email">Email</label>
-                  <input id="email" type="email" name="email" value="" />
-                </div>
-                <div className="pure-control-group">
-                  <label htmlFor="senha">Senha</label>
-                  <input id="senha" type="password" name="senha" />
-                </div>
-                <div className="pure-control-group">
-                  <label></label>
-                  <button type="submit" className="pure-button pure-button-primary">Gravar</button>
-                </div>
+              <form className="pure-form" onSubmit={this.enviaForm} method="post" >
+              <InputCustomizado id="nome"  name="nome"  label="Nome"  value={this.state.nome} onChange={this.setNome}  />
+              <InputCustomizado id="email" name="email" label="Email" type="email" value={this.state.email}  onChange={this.setEmail}  />
+              <InputCustomizado id="senha" name="senha" label="Senha" type="password" value={this.state.senha} onChange={this.setSenha}  />
+              <BotaoCustomizado label="Salvar" />
               </form>
-
             </div>
             <div>
               <table className="pure-table">
@@ -78,11 +117,11 @@ class App extends Component  {
                 <tbody>
                   {
                     this.state.lista.map(autor =>
-                      <tr key="autor.id" >
+                      <tr key={autor.id} >
                         <td>{autor.nome}</td>
                         <td>{autor.email}</td>
                       </tr>
-                      )
+                    )
                   }
                 </tbody>
               </table>
