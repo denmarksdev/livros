@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import InputCustomizado from './componentes/inputCustomizado';
 import BotaoCustomizado from './componentes/botaoSubmitCustomizado';
-import { API_LIVROS, BASE_API } from './Constantes';
+import { BASE_API } from './Constantes';
 import $ from 'jquery';
 import TratadorErros from './TratadorErros';
 import PubSub from 'pubsub-js';
 
-
 const BAD_REQUEST = 400;
 const ATUALIZA_LISTA_LIVROS = "atuLivros";
+const API_LIVROS =  BASE_API + "/livros";
 
 class FormularioLivro extends Component {
 

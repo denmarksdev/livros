@@ -7,6 +7,7 @@ import PubSub from 'pubsub-js';
 import TratadorErros from './TratadorErros';
 
 const ATUALIZA_LISTA_AUTORES = "atuAutores";
+const API_AUTORES = BASE_API + "/autores"
 
 class FormularioAutor extends Component {
 
@@ -27,7 +28,7 @@ class FormularioAutor extends Component {
     };
 
     $.ajax({
-      url: BASE_API,
+      url: API_AUTORES,
       contentType: 'application/json',
       dataType: 'json',
       type: 'post',
@@ -115,7 +116,7 @@ export default class AutorBox extends Component {
 
   componentDidMount() {
     $.ajax({
-      url: BASE_API,
+      url: API_AUTORES,
       dataType: 'json',
       success: lista => {
         this.setState({ lista })
