@@ -2,10 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
+import AutorBox from './Autor';
 
-ReactDOM.render
-    (<App />,
+import * as serviceWorker from './serviceWorker';
+import { Router, Route , browserHistory, IndexRoute } from 'react-router'
+import HomeComponent from './Home';
+
+ReactDOM.render(
+    (<Router history={browserHistory} >
+        <Route path="/" component={App}>
+            <IndexRoute component={HomeComponent} />
+            <Route path="/autor" component={AutorBox}></Route>
+            <Route path="/livro"></Route>
+        </Route>
+    </Router>) 
+    ,
         document.getElementById('root')
     );
 
