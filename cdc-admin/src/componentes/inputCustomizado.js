@@ -1,6 +1,14 @@
 import React, {Component} from 'react';
+import PubSub from 'pubsub-js';
+import {ERRO_VALIDACAO} from '../TratadorErros';
+
+export const LIMPA_ERROS = "limpa-erros";
 
  class InputCustomizado extends Component {
+
+    state = {
+        msgErro:''
+    }
 
     render() {
         return (
@@ -12,8 +20,20 @@ import React, {Component} from 'react';
                     name={this.props.name}
                     value={this.props.value} 
                     onChange={this.props.onChange} />
+                    <span className="error">{this.state.msgErro}</span>
             </div>
         )
+    }
+
+    componentWillMount(){
+        PubSub.subscribe(ERRO_VALIDACAO, (topico,erro) =>{
+            if ( erro.field === this.props.name){
+                this.setState({msgErro: erro.defaultMessage});
+            }
+        });
+        PubSub.subscribe(LIMPA_ERROS , (topico)=> {
+            this.setState({msgErro: '' })
+        })
     }
 }
 
