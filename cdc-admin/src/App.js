@@ -28,7 +28,6 @@ class App extends Component {
     // }
   }
 
-
   render() {
     return (
       <div id="layout">
@@ -37,7 +36,7 @@ class App extends Component {
           <span></span>
         </a>
         <nav id="menu" style={this.state.estilo} onClick={this.offsetCanvas}  >
-          <a className="pure-menu-heading" href="#">LIVROS WEB</a>
+          <a className="pure-menu-heading" href="/">LIVROS WEB</a>
           <div className="pure-menu">
             <ul className="pure-menu-list">
               <li className="pure-menu-item">

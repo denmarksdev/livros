@@ -17,23 +17,6 @@ class FormularioLivro extends Component {
         titulo: '',
         preco: 0,
         autorId: 0,
-        autores: []
-    }
-
-    componentDidMount() {
-
-        $.ajax({
-            url: API_AUTORES,
-            contentType: "application/json",
-            type: "get",
-            dataType: "json",
-            success: (autores => {
-                var autores = autores.sort((a, b) => this.ordenaAutorPorNomeAcendente(a, b))
-                var primeroAutorId = autores[0].id
-                this.setState({ autores, autorId: primeroAutorId });
-            })
-        })
-
     }
 
     setTitulo = (event) => {
@@ -63,6 +46,8 @@ class FormularioLivro extends Component {
             autorId: this.state.autorId
         }
 
+        console.log(autorJson);
+
         $.ajax({
             url: API_LIVROS,
             contentType: "application/json",
@@ -80,10 +65,8 @@ class FormularioLivro extends Component {
         })
     }
 
-    ordenaAutorPorNomeAcendente(a, b) {
-        if (a.nome > b.nome) return -1;
-        if (a.nome < b.nome) return 1;
-        return 0;
+    componentWillReceiveProps(){
+        this.setState({autorId: this.props.autorSelecionadoId })
     }
 
     render() {
@@ -95,9 +78,9 @@ class FormularioLivro extends Component {
                     <InputCustomizado id="preco" name="preco" label="Preço" type="number" value={this.state.preco} onChange={this.setPreco} />
                     <div className="pure-control-group">
                         <label>Autor</label>
-                        <select name="autorId" onChange={this.setAutorId} >
+                        <select name="autorId" defaultValue={this.props.autorSelecionadoId}  onChange={this.setAutorId}  >
                             {
-                                this.state.autores.map(autor =>
+                                this.props.autores.map(autor =>
                                     <option key={autor.id} value={autor.id}>Autor {autor.nome}</option>
                                 )
                             }
@@ -143,10 +126,14 @@ class ListagemLivro extends Component {
 export default class LivroBox extends Component {
 
     state = {
-        livros: []
+        livros: [],
+        autores: [],
+        autorId: 0,
+        autorSelecionadoId :0
     }
 
     componentDidMount() {
+        
         $.ajax({
             url: API_LIVROS,
             contentType: "application/json",
@@ -160,9 +147,31 @@ export default class LivroBox extends Component {
             }
         })
 
+        $.ajax({
+            url: API_AUTORES,
+            contentType: "application/json",
+            type: "get",
+            dataType: "json",
+            success: (autores => {
+                let autoresOrdenados = autores.sort((a, b) => this.ordenaAutorPorNomeAcendente(a, b))
+                let id = autoresOrdenados[0].id;
+                
+                this.setState({ 
+                    autores: autoresOrdenados, 
+                    autorSelecionadoId: id
+                });
+            })
+        })
+
         PubSub.subscribe(ATUALIZA_LISTA_LIVROS, (assunto ,livros) => {
             this.setState( {livros} )
         })
+    }
+
+    ordenaAutorPorNomeAcendente(a, b) {
+        if (a.nome > b.nome) return -1;
+        if (a.nome < b.nome) return 1;
+        return 0;
     }
 
     render() {
@@ -172,7 +181,9 @@ export default class LivroBox extends Component {
                     <h1>Cadastro de livros</h1>
                 </div>
                 <div className="content" id="content">
-                    <FormularioLivro />
+                    <FormularioLivro 
+                        autorSelecionadoId={this.state.autorSelecionadoId}
+                        autores={this.state.autores} />
                     <ListagemLivro lista={this.state.livros} />
                 </div>
             </div>
