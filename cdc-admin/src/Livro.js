@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import InputCustomizado from './componentes/inputCustomizado';
 import BotaoCustomizado from './componentes/botaoSubmitCustomizado';
+import $ from 'jquery';
+import PubSub from 'pubsub-js';
 import { BASE_API } from './Constantes';
 import { API_AUTORES } from './Autor';
-import $ from 'jquery';
 import TratadorErros from './TratadorErros';
-import PubSub from 'pubsub-js';
+import { LIMPA_ERROS } from './componentes/inputCustomizado';
+
 
 const BAD_REQUEST = 400;
 const ATUALIZA_LISTA_LIVROS = "atuLivros";
@@ -61,7 +63,8 @@ class FormularioLivro extends Component {
                 if (resposta.status === BAD_REQUEST) {
                     new TratadorErros().publicaErros(resposta.responseJSON);
                 }
-            }
+            },
+            beforeSend: ()=> { PubSub.publish(LIMPA_ERROS)}
         })
     }
 
