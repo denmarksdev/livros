@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import InputCustomizado from './componentes/inputCustomizado';
 import BotaoCustomizado from './componentes/botaoSubmitCustomizado';
 import { BASE_API } from './Constantes';
+import { API_AUTORES } from './Autor';
 import $ from 'jquery';
 import TratadorErros from './TratadorErros';
 import PubSub from 'pubsub-js';
@@ -22,7 +23,7 @@ class FormularioLivro extends Component {
     componentDidMount() {
 
         $.ajax({
-            url: BASE_API,
+            url: API_AUTORES,
             contentType: "application/json",
             type: "get",
             dataType: "json",

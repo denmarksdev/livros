@@ -7,7 +7,7 @@ import PubSub from 'pubsub-js';
 import TratadorErros from './TratadorErros';
 
 const ATUALIZA_LISTA_AUTORES = "atuAutores";
-const API_AUTORES = BASE_API + "/autores"
+export const API_AUTORES = BASE_API + "/autores"
 
 class FormularioAutor extends Component {
 
