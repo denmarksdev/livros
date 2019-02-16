@@ -5,6 +5,7 @@ import BotaoCustomizado from './componentes/botaoSubmitCustomizado';
 import { BASE_API } from './Constantes';
 import PubSub from 'pubsub-js';
 import TratadorErros from './TratadorErros';
+import { salvaAlteracao  } from './helpers/InputHelper';
 
 const ATUALIZA_LISTA_AUTORES = "atuAutores";
 export const API_AUTORES = BASE_API + "/autores"
@@ -48,31 +49,16 @@ class FormularioAutor extends Component {
     })
   }
 
-  setNome = (evento) => {
-    this.setState(
-      { nome: evento.target.value }
-    );
-  }
-
-  setEmail = (evento) => {
-    this.setState(
-      { email: evento.target.value }
-    );
-  }
-
-  setSenha = (evento) => {
-    this.setState(
-      { senha: evento.target.value }
-    );
-  }
-
   render() {
     return (
       <div className="pure-form">
         <form className="pure-form" onSubmit={this.enviaForm} method="post" >
-          <InputCustomizado id="nome" name="nome" label="Nome" value={this.state.nome} onChange={this.setNome} />
-          <InputCustomizado id="email" name="email" label="Email" type="email" value={this.state.email} onChange={this.setEmail} />
-          <InputCustomizado id="senha" name="senha" label="Senha" type="password" value={this.state.senha} onChange={this.setSenha} />
+          <InputCustomizado id="nome" name="nome" label="Nome" value={this.state.nome} 
+                onChange={ salvaAlteracao.bind(this,"nome") } />
+          <InputCustomizado id="email" name="email" label="Email" type="email" value={this.state.email} 
+                onChange={ salvaAlteracao.bind(this,"email") } />
+          <InputCustomizado id="senha" name="senha" label="Senha" type="password" value={this.state.senha} 
+                onChange={ salvaAlteracao.bind(this,"senha") } />
           <BotaoCustomizado label="Salvar" />
         </form>
       </div>

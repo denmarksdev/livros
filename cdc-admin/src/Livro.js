@@ -7,7 +7,7 @@ import { BASE_API } from './Constantes';
 import { API_AUTORES } from './Autor';
 import TratadorErros from './TratadorErros';
 import { LIMPA_ERROS } from './componentes/inputCustomizado';
-
+import { salvaAlteracao  } from './helpers/InputHelper';
 
 const BAD_REQUEST = 400;
 const ATUALIZA_LISTA_LIVROS = "atuLivros";
@@ -19,24 +19,6 @@ class FormularioLivro extends Component {
         titulo: '',
         preco: 0,
         autorId: 0,
-    }
-
-    setTitulo = (event) => {
-        this.setState(
-            { titulo: event.target.value }
-        );
-    }
-
-    setPreco = (event) => {
-        this.setState(
-            { preco: event.target.value }
-        );
-    }
-
-    setAutorId = (event) => {
-        this.setState(
-            { autorId: parseInt(event.target.value) }
-        );
     }
 
     enviaForm = (event) => {
@@ -57,6 +39,11 @@ class FormularioLivro extends Component {
             dataType: "json",
             data: JSON.stringify(autorJson),
             success: livros => {
+                this.setState({
+                    titulo: '',
+                    preco: 0,
+                    autorId: 0
+                })
                 PubSub.publish(ATUALIZA_LISTA_LIVROS, livros);
             },
             error: (resposta) => {
@@ -77,11 +64,14 @@ class FormularioLivro extends Component {
         return (
             <div className="pure-form">
                 <form className="pure-form" onSubmit={this.enviaForm} method="post" >
-                    <InputCustomizado id="titulo" name="titulo" label="Titulo" value={this.state.titulo} onChange={this.setTitulo} />
-                    <InputCustomizado id="preco" name="preco" label="Preço" type="number" value={this.state.preco} onChange={this.setPreco} />
+                    <InputCustomizado id="titulo" name="titulo" label="Titulo" value={this.state.titulo} 
+                            onChange={ salvaAlteracao.bind(this,"titulo") } />
+                    <InputCustomizado id="preco" name="preco" label="Preço" type="number" value={this.state.preco} 
+                            onChange={ salvaAlteracao.bind(this, "preco") } />
                     <div className="pure-control-group">
                         <label>Autor</label>
-                        <select name="autorId" defaultValue={this.props.autorSelecionadoId}  onChange={this.setAutorId}  >
+                        <select name="autorId" defaultValue={this.props.autorSelecionadoId}  
+                                onChange={ salvaAlteracao.bind(this, "autorId") }  >
                             {
                                 this.props.autores.map(autor =>
                                     <option key={autor.id} value={autor.id}>Autor {autor.nome}</option>
